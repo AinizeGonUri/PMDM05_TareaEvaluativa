@@ -20,8 +20,8 @@ const routes: Routes = [
     loadChildren: () => import('./pages/carruselSwiper/carruselSwiper.module').then( m => m.CarruselPageModule)
   },
   {
-    path: 'fotos',
-    loadChildren: () => import('./pages/fotos/fotos.module').then( m => m.FotosPageModule)
+    path: 'voz',
+    loadChildren: () => import('./pages/voz/voz.module').then( m => m.VozPageModule)
   }
 ];
 
