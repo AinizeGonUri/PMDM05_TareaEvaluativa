@@ -96,7 +96,7 @@ export class VozPage {
     try {
       await Share.share({
         title: 'Compartir Foto',
-        text: `Mira esta foto que tomé: ${photoUrl}\n\nEnvíalo a: ainigonzalez@birt.eus`,
+        text: `Mira esta foto que tomé: ${photoUrl}`,
         url: photoUrl, 
         dialogTitle: 'Compartir vía'
       });
