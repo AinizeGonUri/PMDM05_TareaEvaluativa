@@ -1,6 +1,7 @@
 import { SpeechRecognition } from '@capacitor-community/speech-recognition';
 import { Component } from '@angular/core';
 import { Camera, CameraResultType } from '@capacitor/camera';
+import { Share } from '@capacitor/share';
 
 @Component({
   selector: 'app-voz',
@@ -13,6 +14,7 @@ export class VozPage {
 
   text: string = 'Presiona el botón y di "foto"';
   isListening: boolean = false;
+  photos: string[] = []; 
 
   async checkSpeechRecognition() {
     const available = await SpeechRecognition.available();
@@ -22,11 +24,9 @@ export class VozPage {
       alert('El reconocimiento de voz no está disponible en este dispositivo.');
     }
   }
-  
-  
 
   async checkPermissions() {
-    const permission = await SpeechRecognition.requestPermission();
+    const permission = await SpeechRecognition.requestPermissions();
     console.log('Permisos de reconocimiento:', permission);
   }
 
@@ -45,12 +45,13 @@ export class VozPage {
         this.isListening = false;
         return;
       }
-  
+
       const result = await SpeechRecognition.start({
         language: 'es-ES',
         maxResults: 1,
         prompt: 'Di "foto" para abrir la cámara',
-        partialResults: true, // Habilitar resultados parciales
+        partialResults: false, 
+        popup: true
       });
   
       console.log('Resultado:', result);
@@ -68,7 +69,6 @@ export class VozPage {
       }
     } catch (error) {
       console.error('Error en el reconocimiento de voz:', error);
-      // alert('Error en el reconocimiento de voz: ' + error.message);
     } finally {
       this.isListening = false;
     }
@@ -79,14 +79,30 @@ export class VozPage {
       const image = await Camera.getPhoto({
         quality: 90,
         allowEditing: false,
-        resultType: CameraResultType.Uri
+        resultType: CameraResultType.Uri,
       });
-  
-      console.log('Imagen tomada:', image);
-      alert('¡Foto tomada con éxito!');
+
+      if (image.webPath) {
+        this.photos.unshift(image.webPath);
+      }
+
     } catch (error) {
       console.error('Error al abrir la cámara:', error);
       alert('Hubo un problema al abrir la cámara.');
+    }
+  }
+
+  async sharePhoto(photoUrl: string) {
+    try {
+      await Share.share({
+        title: 'Compartir Foto',
+        text: `Mira esta foto que tomé: ${photoUrl}\n\nEnvíalo a: ainigonzalez@birt.eus`,
+        url: photoUrl, 
+        dialogTitle: 'Compartir vía'
+      });
+    } catch (error) {
+      console.error('Error al compartir la foto:', error);
+      alert('No se pudo compartir la foto.');
     }
   }
 }
