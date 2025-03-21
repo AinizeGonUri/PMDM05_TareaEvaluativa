@@ -22,6 +22,10 @@ const routes: Routes = [
   {
     path: 'voz',
     loadChildren: () => import('./pages/voz/voz.module').then( m => m.VozPageModule)
+  },
+  {
+    path: 'leaflet',
+    loadChildren: () => import('./pages/leaflet/leaflet.module').then( m => m.LeafletPageModule)
   }
 ];
 
